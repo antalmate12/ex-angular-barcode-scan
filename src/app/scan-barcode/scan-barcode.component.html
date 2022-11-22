@@ -1,10 +1,12 @@
 hello
-    <div class="container">
-        <header><h1>My App title</h1></header>
-        <div class="row">
-            <input (keypress)="onKey($event)">
-  <p>{{values}}</p>
-             <input type="text" (window:keypress)="onKey($event)"  autofocus />
-            <p>barcode: {{ barcode }}</p> 
-        </div>
-    </div>
+<div class="container">
+  <header><h1>My App title</h1></header>
+  <div class="row">
+    <input (keypress)="onKey($event)" />
+    <p>{{ values }}</p>
+    <input type="text" (window:keypress)="onKey($event)" autofocus />
+    <p>barcode: {{ barcode }}</p>
+  </div>
+</div>
+
+<button (click)="getUSBDevices()">get usb devices</button>
