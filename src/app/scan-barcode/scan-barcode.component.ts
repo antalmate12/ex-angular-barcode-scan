@@ -12,6 +12,8 @@ export class ScanBarcodeComponent implements OnInit {
   values: string[] = [];
   constructor() {}
 
+  // https://wicg.github.io/webusb/#dom-usb-requestdevice
+
   ngOnInit(): void {
     navigator.usb.addEventListener('connect', (event) => {
       console.log('USB device CONNECTED');
@@ -29,9 +31,38 @@ export class ScanBarcodeComponent implements OnInit {
     this.barcode = event.target.value;
   }
 
+  // @HostListener('window:keypress', ['$event'])
+  // keyEvent(event: KeyboardEvent): void {
+  //   console.log(event);
+  // }
+
+  code = '';
+  reading = false;
+
   @HostListener('window:keypress', ['$event'])
-  keyEvent(event: KeyboardEvent): void {
-    console.log(event);
+  onTextInput(e: any) {
+    //usually scanners throw an 'Enter' key at the end of read
+    if (e.keyCode === 13) {
+      if (this.code.length > 10) {
+        console.log(this.code);
+        /// code ready to use
+        this.code = '';
+      }
+    } else {
+      //while this is not an 'enter' it stores the every key
+      if (e.key === 'ö') {
+        this.code += '0';
+      } else this.code += e.key;
+    }
+
+    //run a timeout of 200ms at the first read and clear everything
+    if (!this.reading) {
+      this.reading = true;
+      setTimeout(() => {
+        this.code = '';
+        this.reading = false;
+      }, 200); //200 works fine for me but you can adjust it
+    }
   }
 
   async getUSBDevices(): Promise<void> {
